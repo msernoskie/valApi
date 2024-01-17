@@ -12,7 +12,8 @@ import WindowState = overwolf.windows.WindowStateEx;
 
 let KILL_COUNT_FOR_ACE: number = 1;
 let HA_URL = "http://homeassistant.local:8123";
-let HA_TOKEN = "";
+let HA_API = "/api/services/input_boolean/toggle";
+let HA_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhOWY3OTE4ZjYxZDQ0YTQ2YjIxNDE3MmEyNzc3NGMyYiIsImlhdCI6MTcwMzYzNjcyNSwiZXhwIjoyMDE4OTk2NzI1fQ.GLsxRDXYSQWlJIv9gk8AgsR8HIl7Ucz3GK4pfe7QcY8";
 let INPUT_BOOLEAN_ENTITY_ID = 'input_boolean.valorant_api_light_test';
 
 // The window displayed in-game while a game is running.
@@ -99,7 +100,7 @@ class InGame extends AppWindow {
       body: JSON.stringify({ entity_id: INPUT_BOOLEAN_ENTITY_ID }),
     };
     this.logLine(this._eventsLog, "Calling...", true);
-    return fetch(`${HA_URL}/api/services/input_boolean/toggle`, requestOptions)
+    return fetch("https://google.com")
       .then(response => {
         this.logLine(this._eventsLog, `Response Status: ${response.status}`, true);
         if (!response.ok) {
@@ -110,6 +111,19 @@ class InGame extends AppWindow {
 
   // Special events will be highlighted in the event log
   private onNewEvents(e) {
+     const headers = new Headers({
+      'Authorization': `Bearer ${HA_TOKEN}`,
+      'Content-Type': 'application/json',
+    });
+  
+    // Toggle the input boolean state
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({ entity_id: INPUT_BOOLEAN_ENTITY_ID }),
+      mode: 'cors',
+    };
+
     const shouldHighlight = e.events.some(event => {
       switch (event.name) {
         case 'kill_feed':
@@ -117,12 +131,22 @@ class InGame extends AppWindow {
           var feedObj = JSON.parse(cleanedString);
 
           // TODO: Hardcode this when testing in range
-          if (feedObj.attacker == "TheMenEgg") {// this._playerName) {
+          if (feedObj.attacker == "Smelvin") {// this._playerName) {
             this.logLine(this._eventsLog, "Suicide", false);
-            var togglePromises = Array.from({ length: 5 }, () => this.toggleInputBoolean());
-            Promise.all(togglePromises)
-              .then(() => this.logLine(this._eventsLog, "Toggle Complete", false))
-              .catch(error => this.logLine(this._eventsLog, `Error:${error}`, true));
+            // fetch("http://192.168.1.133:5000/proxy", requestOptions)
+            // .then(response => {
+            //   if (response.ok) {
+            //     return response.json();
+            //   } else {
+            //     throw new Error(`HTTP error! Status: ${response.status}`);
+            //   }
+            // })
+            // .then(data => {
+            //   this.logLine(this._eventsLog, `API Response: ${data}`, true);
+            // })
+            // .catch(error => {
+            //   this.logLine(this._eventsLog, `Error: ${error}`, true);
+            // });          
           }
           if (feedObj.attacker == this._playerName && feedObj.victim != this._playerName && feedObj.is_victim_teammate == false) {
             this._killFeedSet.add(feedObj.attacker .victim);
@@ -130,6 +154,20 @@ class InGame extends AppWindow {
           this.logLine(this._eventsLog,  this._killFeedSet, false);
           if (this._killFeedSet.size == KILL_COUNT_FOR_ACE) {
             this.logLine(this._eventsLog, "ACE", false);
+            fetch("http://192.168.1.133:5000/proxy", requestOptions)
+            .then(response => {
+              if (response.ok) {
+                return response.json();
+              } else {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+            })
+            .then(data => {
+              this.logLine(this._eventsLog, `API Response: ${data}`, true);
+            })
+            .catch(error => {
+              this.logLine(this._eventsLog, `Error: ${error}`, true);
+            });          
           }
         case 'death':
         case 'assist':
