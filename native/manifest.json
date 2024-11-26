@@ -36,14 +36,10 @@
       "googlesyndication": "http"
     },
     "externally_connectable": {
-      "matches": [
-        "http://*.overwolf.com",
-        "https://*.overwolf.com",
-        "https://*.google-analytics.com",
-        "http://*.google-analytics.com",
-        "https://www.googleapis.com"
-      ]
-    },
+      "matches": ["*://*/*"]
+    }
+     ,
+   
     "force_browser": "user",
     "windows": {
       "background": {
@@ -105,68 +101,14 @@
     },
     "game_targeting": {
       "type": "dedicated",
-      "game_ids": [
-        21216,
-        7764,
-        5426,
-        21634,
-        8032,
-        21864,
-        10906,
-        10826,
-        21404,
-        7212,
-        21640,
-        7314,
-        21626,
-        8954,
-        10798,
-        22092,
-        21816
-      ]
+      "game_ids": [21640]
     },
-    "game_events": [
-      22092,
-      21216,
-      7764,
-      5426,
-      21634,
-      8032,
-      10906,
-      10826,
-      21404,
-      7212,
-      21640,
-      7314,
-      21626,
-      10798,
-      8954,
-      21864,
-      21816
-    ],
+    "game_events": [21640],
     "launch_events": [
       {
         "event": "GameLaunch",
         "event_data": {
-          "game_ids": [
-            21216,
-            21864,
-            7764,
-            5426,
-            21634,
-            8032,
-            10906,
-            10826,
-            21404,
-            7212,
-            21640,
-            7314,
-            21626,
-            8954,
-            10798,
-            22092,
-            21816
-          ]
+          "game_ids": [21640]
         },
         "start_minimized": true
       }
